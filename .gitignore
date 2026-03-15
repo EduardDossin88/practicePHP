@@ -1,0 +1,6 @@
+certs/
+.idea/
+.env
+.env.*
+!.env.example
+db_data/

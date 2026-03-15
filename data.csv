@@ -1,0 +1,4 @@
+country,city,isActive,gender,birthDate,salary,hasChildren,familyStatus,registrationDate
+USA,New York,true,male,1990-05-15,5000.00,false,single,2023-01-10
+Poland,Warsaw,false,female,1985-11-20,6000.00,true,married,2022-08-05
+Germany,Berlin,true,male,1992-03-10,4500.00,false,single,2023-06-15
