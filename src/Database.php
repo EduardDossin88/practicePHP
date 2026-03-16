@@ -1,4 +1,8 @@
 <?php
+namespace Admin\Practice;
+
+use PDO;
+use PDOException;
 
 class Database
 {
