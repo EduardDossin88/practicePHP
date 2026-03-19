@@ -3,7 +3,7 @@
 namespace App\Commands;
 
 use App\Services\Database;
-use PDO;
+
 class ImportCommand
 {
     public function execute(): void

@@ -29,7 +29,7 @@ console:
 
 # Запуск статанализатора (PHPStan 8 уровня)
 analyze:
-	$(DC) exec php-fpm vendor/bin/phpstan analyse -c config/phpstan.neon
+	$(DC) exec -T php-fpm vendor/bin/phpstan analyse -c config/phpstan.neon
 # Запуск форматтера (PSR-12)
 format:
-	$(DC) exec php-fpm vendor/bin/php-cs-fixer fix --config=config/.php-cs-fixer.dist.php
+	$(DC) exec -T php-fpm vendor/bin/php-cs-fixer fix --config=config/.php-cs-fixer.dist.php
