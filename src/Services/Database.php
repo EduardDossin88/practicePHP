@@ -1,20 +1,19 @@
 <?php
-namespace Admin\Practice;
 
+namespace App\Services;
 use PDO;
-use PDOException;
 
 class Database
 {
-    private static $instance = null;
-    private $pdo;
+    private static ?self $instance = null;
+    private ?PDO $pdo = null;
 
     private function __construct()
     {
-        $host = getenv('DB_HOST')?: 'db';
-        $db = getenv('POSTGRES_DB');
-        $user = getenv('POSTGRES_USER');
-        $pass = getenv('POSTGRES_PASSWORD');
+        $host = getenv('DB_HOST') ?: 'db';
+        $db = (string) getenv('POSTGRES_DB');
+        $user = getenv('POSTGRES_USER') ?: null;
+        $pass = getenv('POSTGRES_PASSWORD') ?: null;
 
         $dsn = "pgsql:host=$host;dbname=$db";
         $options = [
@@ -25,19 +24,18 @@ class Database
 
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
-        } catch (\PDOException $e)
-        {
+        } catch (\PDOException $e) {
             die("Ошибка подключения к базе данных: " . $e->getMessage());
         }
     }
-    public static function getInstance()
+    public static function getInstance(): self
     {
-    if(self::$instance == null){
-        self::$instance = new self();
+        if (self::$instance == null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
-    return self::$instance;
-    }
-    public function getConnection()
+    public function getConnection(): ?PDO
     {
         return $this->pdo;
     }

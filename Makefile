@@ -1,6 +1,9 @@
-.PHONY: cert up down build import
+.PHONY: cert up down build import console analyze format
 
 ENV_FILE ?= .env
+
+# Переменная с базовой командой, которая теперь знает, что Докер лежит в папке docker/
+DC = docker compose -p practice -f docker/compose.yml --env-file $(ENV_FILE)
 
 cert:
 	mkdir -p certs
@@ -8,13 +11,25 @@ cert:
 	@echo "Сертификаты успешно созданы в папке certs/"
 
 build:
-	docker-compose --env-file $(ENV_FILE) build
+	$(DC) build
 
 up:
-	docker-compose --env-file $(ENV_FILE) up -d
+	$(DC) up -d
 
 down:
-	docker-compose --env-file $(ENV_FILE) down
+	$(DC) down
 
+# Старый скрипт импорта
 import:
-	docker-compose --env-file $(ENV_FILE) run --rm php-cli php import.php
+	$(DC) run --rm php-cli php import.php
+
+# Запуск единой консоли (пример: make console cmd="generate 50")
+console:
+	$(DC) exec php-fpm php bin/console.php $(cmd)
+
+# Запуск статанализатора (PHPStan 8 уровня)
+analyze:
+	$(DC) exec php-fpm vendor/bin/phpstan analyse -c config/phpstan.neon
+# Запуск форматтера (PSR-12)
+format:
+	$(DC) exec php-fpm vendor/bin/php-cs-fixer fix --config=config/.php-cs-fixer.dist.php
