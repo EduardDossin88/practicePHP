@@ -1,51 +1,58 @@
 <?php
 
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Services\Database;
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
 header('Content-Type: application/json; charset=utf-8');
 
+$db = Database::getInstance()->getConnection();
+
+if ($db === null) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Ошибка подключения к базе данных']);
+    exit;
+}
+
+$sql = "SELECT * FROM users WHERE 1=1";
+$params = [];
+
+$allowedFilters = [
+    'country', 'city', 'is_active', 'gender',
+    'birth_date', 'has_children', 'family_status', 'registration_date'
+];
+
+foreach ($allowedFilters as $filter) {
+    if (isset($_GET[$filter]) && $_GET[$filter] !== '') {
+        $sql .= " AND $filter = :$filter";
+        $params[$filter] = $_GET[$filter];
+    }
+}
+
+if (!empty($_GET['min_salary'])) {
+    $sql .= " AND salary >= :min_salary";
+    $params['min_salary'] = (int)$_GET['min_salary'];
+}
+if (!empty($_GET['max_salary'])) {
+    $sql .= " AND salary <= :max_salary";
+    $params['max_salary'] = (int)$_GET['max_salary'];
+}
+
 try {
-    $dbInstance = Database::getInstance();
-    $pdo = $dbInstance->getConnection();
-
-    if ($pdo === null) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Не удалось установить соединение с БД']);
-        exit;
-    }
-
-    $query = "SELECT * FROM users WHERE 1=1";
-    $params = [];
-
-
-    if (!empty($_GET['country'])) {
-        $query .= " AND country = :country";
-        $params[':country'] = $_GET['country'];
-    }
-
-    if (isset($_GET['is_active']) && $_GET['is_active'] !== '') {
-        $query .= " AND is_active = :is_active";
-        $params[':is_active'] = filter_var($_GET['is_active'], FILTER_VALIDATE_BOOLEAN);
-    }
-
-
-    $stmt = $pdo->prepare($query);
+    $stmt = $db->prepare($sql);
     $stmt->execute($params);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($results, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    echo json_encode([
+        'total_found' => count($results),
+        'filters_applied' => $params,
+        'data' => $results
+    ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-} catch (\PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['error' => "Ошибка базы данных: " . $e->getMessage()]);
 } catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => "Общая ошибка: " . $e->getMessage()]);
+    echo json_encode(['error' => 'Ошибка базы данных: ' . $e->getMessage()]);
 }

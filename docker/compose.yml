@@ -48,7 +48,7 @@ services:
     volumes:
       - ../:/var/www/html
       - ../config/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../docker/certs:/etc/nginx/certs
+      - ../docker/nginx/certs:/etc/nginx/certs
     depends_on:
       - php-fpm
 

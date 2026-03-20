@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Services\Database;
+use PDO;
 
 class ImportCommand
 {
@@ -28,9 +29,24 @@ class ImportCommand
             return;
         }
 
+        $db->exec("DROP TABLE IF EXISTS users");
+        $db->exec("CREATE TABLE users (
+            id SERIAL PRIMARY KEY,
+            country VARCHAR(100),
+            city VARCHAR(100),
+            is_active VARCHAR(10),
+            gender VARCHAR(20),
+            birth_date DATE,
+            salary INT,
+            has_children VARCHAR(10),
+            family_status VARCHAR(50),
+            registration_date DATE
+        )");
+
         fgetcsv($file, 0, ",", "\"", "");
 
-        $sql = "INSERT INTO users (country, city, salary) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (country, city, is_active, gender, birth_date, salary, has_children, family_status, registration_date) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $db->prepare($sql);
 
         $count = 0;
@@ -38,11 +54,17 @@ class ImportCommand
 
         try {
             while (($row = fgetcsv($file, 0, ",", "\"", "")) !== false) {
-                $stmt->execute([$row[0], $row[1], $row[5]]);
-                $count++;
+                // Проверяем, что в строке действительно есть 9 колонок
+                if (count($row) >= 9) {
+                    $stmt->execute([
+                        $row[0], $row[1], $row[2], $row[3], $row[4],
+                        (int)$row[5], $row[6], $row[7], $row[8]
+                    ]);
+                    $count++;
+                }
             }
             $db->commit();
-            echo "✅ Успешно импортировано $count записей!\n";
+            echo "✅ Успешно импортировано $count записей со ВСЕМИ полями!\n";
         } catch (\Exception $e) {
             $db->rollBack();
             echo "❌ Ошибка при импорте: " . $e->getMessage() . "\n";
