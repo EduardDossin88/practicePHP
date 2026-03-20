@@ -19,12 +19,12 @@ class AnalyzeCommand
         echo "\n📊 СТАТИСТИКА ПО БАЗЕ ДАННЫХ 📊\n";
         echo str_repeat("-", 40) . "\n";
 
-        // 1. Считаем общее количество пользователей
+        // Считаем сколько пользователй
         $totalQuery = $db->query("SELECT COUNT(*) FROM users");
         $totalUsers = $totalQuery !== false ? $totalQuery->fetchColumn() : 0;
         echo "Всего записей в базе: $totalUsers\n";
 
-        // 2. Считаем среднюю зарплату
+        // Подсчёт зп
         $salaryQuery = $db->query("SELECT AVG(salary) FROM users");
         $avgSalary = $salaryQuery !== false ? $salaryQuery->fetchColumn() : 0;
 
@@ -38,7 +38,6 @@ class AnalyzeCommand
 
         if ($stmt !== false) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                // Строгие проверки типов для PHPStan
                 $city = isset($row['city']) && is_string($row['city']) ? $row['city'] : 'Неизвестно';
                 $count = isset($row['count']) ? (int)$row['count'] : 0;
 

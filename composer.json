@@ -2,7 +2,9 @@
     "name": "admin/practice",
     "autoload": {
         "psr-4": {
-            "App\\": "src/"        }
+            "App\\": "src/",
+            "Core\\": "core/"
+        }
     },
     "authors": [
         {
