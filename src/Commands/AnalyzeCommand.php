@@ -19,12 +19,10 @@ class AnalyzeCommand
         echo "\n📊 СТАТИСТИКА ПО БАЗЕ ДАННЫХ 📊\n";
         echo str_repeat("-", 40) . "\n";
 
-        // Считаем сколько пользователй
         $totalQuery = $db->query("SELECT COUNT(*) FROM users");
         $totalUsers = $totalQuery !== false ? $totalQuery->fetchColumn() : 0;
         echo "Всего записей в базе: $totalUsers\n";
 
-        // Подсчёт зп
         $salaryQuery = $db->query("SELECT AVG(salary) FROM users");
         $avgSalary = $salaryQuery !== false ? $salaryQuery->fetchColumn() : 0;
 
@@ -32,7 +30,6 @@ class AnalyzeCommand
             echo "Средняя зарплата: " . number_format((float)$avgSalary, 2, '.', ' ') . " руб.\n";
         }
 
-        // 3. Выводим Топ-3 города
         echo "\nТоп-3 города по населению:\n";
         $stmt = $db->query("SELECT city, COUNT(*) as count FROM users GROUP BY city ORDER BY count DESC LIMIT 3");
 
@@ -44,7 +41,6 @@ class AnalyzeCommand
                 echo " 📍 $city: $count чел.\n";
             }
         }
-
         echo str_repeat("-", 40) . "\n";
     }
 }
