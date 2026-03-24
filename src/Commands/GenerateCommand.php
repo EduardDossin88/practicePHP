@@ -27,17 +27,17 @@ class GenerateCommand
             return;
         }
 
-        fputcsv($file, ['country', 'city', 'isActive', 'gender', 'birthDate', 'salary', 'hasChildren', 'familyStatus', 'registrationDate'], ",", "\"", "");
+        fputcsv($file, ['country', 'city', 'is_active', 'gender', 'birth_Date', 'salary', 'has_children', 'family_status', 'registration_date'], ",", "\"", "");
 
         for ($i = 0; $i < $quantity; $i++) {
             fputcsv($file, [
                 $faker->country,
                 $faker->city,
-                $faker->boolean ? 'true' : 'false',
+                $faker->boolean ? 1 : 0,
                 $faker->randomElement(['male', 'female']),
                 $faker->date('Y-m-d', '2005-01-01'),
                 $faker->numberBetween(30000, 150000),
-                $faker->boolean ? 'true' : 'false',
+                $faker->boolean ? 1 : 0,
                 $faker->randomElement(['single', 'married', 'divorced']),
                 $faker->date('Y-m-d')
             ], ",", "\"", "");
