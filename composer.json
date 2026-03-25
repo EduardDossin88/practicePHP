@@ -21,7 +21,7 @@
         "vlucas/phpdotenv": "^5.6"
     },
     "scripts": {
-        "analyze": "phpstan analyse -c config/phpstan.neon",
+        "analyze": "phpstan analyse -c phpstan.neon",
         "format": "php-cs-fixer fix --config=config/.php-cs-fixer.dist.php"
     }
 }

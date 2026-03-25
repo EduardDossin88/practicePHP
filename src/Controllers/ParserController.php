@@ -53,28 +53,34 @@ class ParserController
             ], JSON_UNESCAPED_UNICODE);
             return;
         }
+
         try {
 
             $importCommand = new ImportCommand();
-
             ob_start();
             $importCommand->execute();
-            $output = ob_get_clean();
+            $output = (string)ob_get_clean();
+
+            if (mb_stripos($output, 'ошибок') !== false || mb_stripos($output, 'error') !== false) {
+                throw new \Exception($output);
+            }
 
             http_response_code(200);
             echo json_encode([
                 'success' => true,
                 'message' => 'Файл успешно загружен и обработан базой данных!',
-                'import_log' => trim($output ?: '')
+                'import_log' => trim($output)
             ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
         } catch (\Exception $e) {
             if (ob_get_length() > 0) {
                 ob_end_clean();
             }
+
             http_response_code(500);
             echo json_encode([
                 'success' => false,
-                'error' => 'Не удалось сохранить файл на сервере: ' . $e->getMessage()
+                'error' => 'Ошибка при импорте в бд: ' . trim($e->getMessage())
             ], JSON_UNESCAPED_UNICODE);
         }
     }

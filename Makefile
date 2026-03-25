@@ -22,6 +22,6 @@ console:
 	$(DC) exec php-fpm php bin/console.php $(cmd)
 
 analyze:
-	$(DC) exec -T php-fpm vendor/bin/phpstan analyse -c config/phpstan.neon
+	$(DC) exec -T php-fpm vendor/bin/phpstan analyse -c phpstan.neon
 format:
-	$(DC) exec -T php-fpm vendor/bin/php-cs-fixer fix --config=config/.php-cs-fixer.dist.php
+	$(DC) exec -T php-fpm vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php

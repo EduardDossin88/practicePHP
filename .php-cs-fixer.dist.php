@@ -1,11 +1,10 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/../src')
+    ->in(__DIR__ . '/src')
     ->append([
-        __DIR__ . '/../public/index.php',
-        __DIR__ . '/../public/search.php',
-        __DIR__ . '/../bin/console.php',
+        __DIR__ . '/public/index.php',
+        __DIR__ . '/bin/console.php',
     ]);
 
 $config = new PhpCsFixer\Config();

@@ -27,7 +27,7 @@ class GenerateCommand
             return;
         }
 
-        fputcsv($file, ['country', 'city', 'is_active', 'gender', 'birth_Date', 'salary', 'has_children', 'family_status', 'registration_date'], ",", "\"", "");
+        fputcsv($file, ['country', 'city', 'is_active', 'gender', 'birth_date', 'salary', 'has_children', 'family_status', 'registration_date'], ",", "\"", "");
 
         for ($i = 0; $i < $quantity; $i++) {
             fputcsv($file, [

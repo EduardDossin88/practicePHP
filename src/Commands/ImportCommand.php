@@ -11,21 +11,18 @@ class ImportCommand
         $filePath = __DIR__ . '/../../data/data.csv';
 
         if (!file_exists($filePath)) {
-            echo "❌ Файл не найден: $filePath\n";
-            return;
+            throw new \Exception("Файл не найден: $filePath");
         }
 
         $file = fopen($filePath, 'r');
         if ($file === false) {
-            echo "❌ Не удалось открыть файл.\n";
-            return;
+            throw new \Exception("Нэ удалось открыть файл");
         }
 
         $db = Database::getInstance()->getConnection();
         if ($db === null) {
             fclose($file);
-            echo "❌ База данных недоступна.\n";
-            return;
+            throw new \Exception("База данных не доступна");
         }
 
         $db->exec("DROP TABLE IF EXISTS users");
@@ -68,9 +65,9 @@ class ImportCommand
             echo "✅ Успешно импортировано $count записей со ВСЕМИ полями!\n";
         } catch (\Exception $e) {
             $db->rollBack();
-            echo "❌ Ошибка при импорте: " . $e->getMessage() . "\n";
+            throw new \Exception("Ошибка при импорте: " . $e->getMessage());
+        } finally {
+            fclose($file);
         }
-
-        fclose($file);
     }
 }
