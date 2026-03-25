@@ -1,0 +1,49 @@
+# Composer
+/vendor/
+composer.phar
+
+# Environment & secrets (never commit real credentials)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.pem
+*.key
+*.p12
+
+# PHP
+.phpunit.result.cache
+phpunit.xml
+
+# PHP CS Fixer / PHPStan caches
+.php-cs-fixer.cache
+.phpstan/
+
+# Logs & temp
+*.log
+*.cache
+/tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE & editors
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-*
+
+# Docker — локальные переопределения (порты, volumes, секреты)
+docker-compose.override.yml
+*.override.yml
+
+# Сгенерированные / загруженные CSV (не в репозиторий)
+/data/*.csv
+!/data/.gitkeep

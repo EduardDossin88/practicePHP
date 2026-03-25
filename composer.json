@@ -1,0 +1,22 @@
+{
+    "name": "app/csv-analyzer",
+    "description": "CSV import, generation and analysis app without frameworks",
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "fakerphp/faker": "^1.24"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "friendsofphp/php-cs-fixer": "^3.66"
+    },
+    "scripts": {
+        "analyze": "phpstan analyse --configuration=config/phpstan.neon",
+        "format": "php-cs-fixer fix --config=config/.php-cs-fixer.dist.php"
+    }
+}
