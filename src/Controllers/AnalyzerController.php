@@ -12,7 +12,7 @@ class AnalyzerController
 
         $filters = [];
 
-        $allowedExactFields = ['country', 'gender', 'city', 'is_active'];
+        $allowedExactFields = ['id', 'country', 'city', 'is_active', 'gender', 'salary', 'has_children', 'family_status'];
 
         foreach ($allowedExactFields as $field) {
             if (isset($_GET[$field]) && $_GET[$field] !== '') {
@@ -25,12 +25,12 @@ class AnalyzerController
             $from = $_GET[$dateField . '_from'] ?? null;
             $to = $_GET[$dateField . '_to'] ?? null;
 
-            if ($from !== null && $to !== null) {
+            if (($from !== null && $from !== '') || ($to !== null && $to !== '')) {
                 $filters[$dateField] = [];
-                if ($from !== '') {
+                if ($from !== null && $from !== '') {
                     $filters[$dateField]['from'] = $from;
                 }
-                if ($to !== '') {
+                if ($to !== null && $to !== '') {
                     $filters[$dateField]['to'] = $to;
                 }
             }

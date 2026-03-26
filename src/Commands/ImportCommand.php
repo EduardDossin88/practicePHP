@@ -25,8 +25,7 @@ class ImportCommand
             throw new \Exception("База данных не доступна");
         }
 
-        $db->exec("DROP TABLE IF EXISTS users");
-        $db->exec("CREATE TABLE users (
+        $db->exec("CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             country VARCHAR(100),
             city VARCHAR(100),

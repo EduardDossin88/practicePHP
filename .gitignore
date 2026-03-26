@@ -6,4 +6,4 @@ docker/nginx/certs/
 !.env.example
 db_data/
 /vendor/
-.php-cs-fixer.cache
+/data/data.csv

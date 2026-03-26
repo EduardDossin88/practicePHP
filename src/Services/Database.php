@@ -26,7 +26,7 @@ class Database
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (\PDOException $e) {
-            die("Ошибка подключения к базе данных: " . $e->getMessage());
+            throw new \Exception("Ошибка подключения к базе ");
         }
     }
     public static function getInstance(): self
