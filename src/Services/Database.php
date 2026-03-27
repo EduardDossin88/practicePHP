@@ -11,10 +11,10 @@ class Database
 
     private function __construct()
     {
-        $host = getenv('DB_HOST') ?: 'db';
-        $db = (string) getenv('POSTGRES_DB');
-        $user = getenv('POSTGRES_USER') ?: null;
-        $pass = getenv('POSTGRES_PASSWORD') ?: null;
+        $host = (string)($_ENV['DB_HOST'] ?: 'db');
+        $db = (string)($_ENV['POSTGRES_DB'] ?? '');
+        $user = (string)($_ENV['POSTGRES_USER'] ?? '');
+        $pass = (string)($_ENV['POSTGRES_PASSWORD'] ?? '');
 
         $dsn = "pgsql:host=$host;dbname=$db";
         $options = [
@@ -26,7 +26,7 @@ class Database
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (\PDOException $e) {
-            throw new \Exception("Ошибка подключения к базе ");
+            throw new \Exception("Ошибка подключения к базе: " . $e->getMessage());
         }
     }
     public static function getInstance(): self

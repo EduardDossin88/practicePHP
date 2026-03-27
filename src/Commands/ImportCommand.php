@@ -2,6 +2,7 @@
 
 namespace App\Commands;
 
+use App\Models\User;
 use App\Services\Database;
 
 class ImportCommand
@@ -40,28 +41,31 @@ class ImportCommand
 
         fgetcsv($file, 0, ",", "\"", "");
 
-        $sql = "INSERT INTO users (country, city, is_active, gender, birth_date, salary, has_children, family_status, registration_date) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $db->prepare($sql);
-
         $count = 0;
+
         $db->beginTransaction();
 
         try {
             while (($row = fgetcsv($file, 0, ",", "\"", "")) !== false) {
                 if (count($row) >= 9) {
-                    $stmt->execute([
-                        $row[0], $row[1], $row[2], $row[3], $row[4],
-
-                        (int)$row[5], $row[6], $row[7], $row[8]
+                    User::insert([
+                        'country' => $row[0],
+                        'city' => $row[1],
+                        'is_active' => $row[2],
+                        'gender' => $row[3],
+                        'birth_date' => $row[4],
+                        'salary' => $row[5],
+                        'has_children' => $row[6],
+                        'family_status' => $row[7],
+                        'registration_date' => $row[8]
                     ]);
                     $count++;
                 } else {
-                    echo "⚠️ Строка пропущена: ожидалось 9 колонок, получено " . count($row) . ". Содержимое: " . implode('|', $row) . "\n";
+                    echo "Строка пропущена: ожидалось 9 колонок, получено " . count($row) . ". Содержимое: " . implode('|', $row) . "\n";
                 }
             }
             $db->commit();
-            echo "✅ Успешно импортировано $count записей со ВСЕМИ полями!\n";
+            echo "Успешно импортировано $count записей со ВСЕМИ полями!\n";
         } catch (\Exception $e) {
             $db->rollBack();
             throw new \Exception("Ошибка при импорте: " . $e->getMessage());

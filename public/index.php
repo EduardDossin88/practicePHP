@@ -10,6 +10,9 @@ use App\Controllers\GeneratorController;
 use App\Controllers\ParserController;
 use Core\Router;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->safeLoad();
+
 $router = new Router();
 
 $router->get('/', function () {
@@ -27,7 +30,7 @@ $router->get('/analyze', [new AnalyzerController(), 'analyze']);
 
 $router->post('/parse', [new ParserController(), 'parse']);
 
-$router->get('/generate', [new GeneratorController(), 'generate']);
+$router->post('/generate', [new GeneratorController(), 'generate']);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];

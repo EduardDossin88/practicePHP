@@ -82,4 +82,24 @@ abstract class BaseModel
         }
         return $results;
     }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return bool
+     */
+    public static function insert(array $data): bool
+    {
+        $table = static::getTableName();
+        $columns = array_keys($data);
+        $placeholders = array_map(fn ($col) => ':' . $col, $columns);
+        $sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            $table,
+            implode(', ', $columns),
+            implode(', ', $placeholders)
+        );
+
+        $stmt = self::getDb()->prepare($sql);
+        return $stmt->execute($data);
+    }
 }
