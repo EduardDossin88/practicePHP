@@ -1,6 +1,8 @@
-.PHONY: cert up down build import
+.PHONY: cert up down build console analyze format
 
 ENV_FILE ?= .env
+
+DC = docker compose -p practice -f docker/compose.yml --env-file $(ENV_FILE)
 
 cert:
 	mkdir -p certs
@@ -8,13 +10,18 @@ cert:
 	@echo "Сертификаты успешно созданы в папке certs/"
 
 build:
-	docker-compose --env-file $(ENV_FILE) build
+	$(DC) build
 
 up:
-	docker-compose --env-file $(ENV_FILE) up -d
+	$(DC) up -d
 
 down:
-	docker-compose --env-file $(ENV_FILE) down
+	$(DC) down
 
-import:
-	docker-compose --env-file $(ENV_FILE) run --rm php-cli php import.php
+console:
+	$(DC) exec php-fpm php bin/console.php $(cmd)
+
+analyze:
+	$(DC) exec -T php-fpm vendor/bin/phpstan analyse -c phpstan.neon
+format:
+	$(DC) exec -T php-fpm vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php

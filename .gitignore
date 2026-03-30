@@ -1,7 +1,9 @@
-certs/
+docker/nginx/certs/
 .idea/
 .env
 .env.*
+.env.dev
 !.env.example
 db_data/
 /vendor/
+/data/data.csv

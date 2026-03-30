@@ -1,0 +1,28 @@
+#!/bin/sh
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo " Запуск автоматических проверок перед коммитом..."
+
+echo " Запуск форматирования (make format)..."
+make format
+
+if [ $? -ne 0 ]; then
+    echo "${RED}❌ ОШИБКА: Форматтер завершился с ошибкой!${NC}"
+    exit 1
+fi
+
+#git add .
+
+echo " Запуск статического анализа (make analyze)..."
+make analyze
+
+if [ $? -ne 0 ]; then
+    echo "${RED}❌ Ошибка: PHPStan нашел проблемы в коде!${NC}"
+    exit 1
+fi
+
+echo "${GREEN}✅ Все проверки пройдены! Коммит разрешен.${NC}"
+exit 0

@@ -1,0 +1,4 @@
+POST http://localhost/generate
+Content-Type: application/x-www-form-urlencoded
+
+quantity=50
